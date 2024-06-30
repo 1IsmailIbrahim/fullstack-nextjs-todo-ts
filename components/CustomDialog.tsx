@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -26,17 +27,19 @@ import {
 import { useForm } from "react-hook-form";
 import { TodoFormValues } from "@/schema";
 import { todoFormSchema } from "@/schema";
-import { toast } from "./ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { createTodoAction } from "@/actions/todo.actions";
-import { useState } from "react";
-
-const defaultValues: Partial<TodoFormValues> = {
-  title: "I own a computer.",
-  body: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. At, facere.",
-};
 
 export function CustomDialog() {
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+
+  const defaultValues: Partial<TodoFormValues> = {
+    title: "I own a computer.",
+    body: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. At, facere.",
+    completed: false,
+  };
 
   const form = useForm<TodoFormValues>({
     resolver: zodResolver(todoFormSchema),
@@ -45,16 +48,27 @@ export function CustomDialog() {
   });
 
   const onSubmit = async (data: TodoFormValues) => {
-    await createTodoAction(data);
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-    setOpen(false);
+    setIsLoading(true);
+    try {
+      await createTodoAction(data);
+      setOpen(false);
+      toast({
+        title: "Success",
+        description: (
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+          </pre>
+        ),
+      });
+    } catch (error) {
+      console.error("Error submitting form", error);
+      toast({
+        title: "Error",
+        description: "There was an error submitting the form.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -109,21 +123,32 @@ export function CustomDialog() {
                 />
               </div>
               <div className="items-top flex space-x-2 py-2">
-                <Checkbox id="terms1" />
-                <div className="grid gap-1.5 leading-none">
-                  <label
-                    htmlFor="terms1"
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    Completed
-                  </label>
-                  <p className="text-sm text-muted-foreground">
-                    If you have completed your task, check the box
-                  </p>
-                </div>
+                <FormField
+                  control={form.control}
+                  name="completed"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="flex items-center gap-2">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <FormLabel>Completed</FormLabel>
+                      </div>
+                      <FormDescription>
+                        If you have completed your task, check the box
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
               <DialogFooter>
-                <Button type="submit">Add Todo</Button>
+                <Button type="submit" isLoading={isLoading}>
+                  Add Todo
+                </Button>
               </DialogFooter>
             </form>
           </Form>
