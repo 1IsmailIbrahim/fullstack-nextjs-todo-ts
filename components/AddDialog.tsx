@@ -30,7 +30,7 @@ import { todoFormSchema } from "@/schema";
 import { useToast } from "@/components/ui/use-toast";
 import { createTodoAction } from "@/actions/todo.actions";
 
-export function CustomDialog() {
+export function AddDialog({ userId }: { userId: string | null }) {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -50,7 +50,7 @@ export function CustomDialog() {
   const onSubmit = async (data: TodoFormValues) => {
     setIsLoading(true);
     try {
-      await createTodoAction(data);
+      await createTodoAction(data, userId);
       setOpen(false);
       toast({
         title: "Success",

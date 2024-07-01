@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -7,18 +7,19 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { ITodo } from "@/interfaces";
 interface DeleteDialogProps {
   open: boolean;
   onClose: () => void;
   onDelete: () => void;
+  isLoading: boolean;
 }
 
-const DeleteDialog: React.FC<DeleteDialogProps> = ({
+const DeleteDialog = ({
   open,
   onClose,
   onDelete,
-}) => {
+  isLoading,
+}: DeleteDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
@@ -33,7 +34,11 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({
           <Button variant={"outline"} onClick={onClose}>
             Cancel
           </Button>
-          <Button variant={"destructive"} onClick={onDelete}>
+          <Button
+            isLoading={isLoading}
+            variant={"destructive"}
+            onClick={onDelete}
+          >
             Delete
           </Button>
         </div>

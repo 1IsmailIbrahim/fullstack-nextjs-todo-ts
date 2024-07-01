@@ -10,15 +10,22 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { ITodo } from "@/interfaces";
 import ActionsModal from "./ActionsModal";
+import { AddDialog } from "@/components/AddDialog";
+import { auth } from "@clerk/nextjs/server";
 
 interface IProps {
   todos: ITodo[];
 }
 
-const TodosList: React.FC<IProps> = ({ todos }) => {
+const TodosList = ({ todos }: IProps) => {
+  const { userId }: { userId: string | null } = auth();
+
   let i = 1;
   return (
     <div>
+      <div>
+        <AddDialog userId={userId} />
+      </div>
       <Table>
         <TableCaption>A list of your todos.</TableCaption>
         <TableHeader>

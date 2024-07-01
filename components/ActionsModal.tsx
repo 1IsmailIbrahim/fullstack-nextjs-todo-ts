@@ -11,11 +11,12 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 interface ActionsModalProps {
   todo: ITodo;
 }
-const ActionsModal: React.FC<ActionsModalProps> = ({ todo }) => {
+const ActionsModal = ({ todo }: ActionsModalProps) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [todoToDelete, setTodoToDelete] = useState<ITodo | null>(null);
   const [todoToEdit, setTodoToEdit] = useState<ITodo | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const openDeleteDialog = (todo: ITodo) => {
     setTodoToDelete(todo);
@@ -38,14 +39,21 @@ const ActionsModal: React.FC<ActionsModalProps> = ({ todo }) => {
   };
 
   const onDelete = async () => {
-    if (todoToDelete) {
-      await deleteTodoAction(todoToDelete.id);
-      closeDeleteDialog();
+    setIsLoading(true);
+    try {
+      if (todoToDelete) {
+        await deleteTodoAction(todoToDelete.id);
+        closeDeleteDialog();
+      }
+    } catch (error) {
+      console.error("Error submitting form", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div>
+    <div className="flex gap-2">
       <Dialog>
         <DialogTrigger asChild>
           <Button
@@ -79,6 +87,7 @@ const ActionsModal: React.FC<ActionsModalProps> = ({ todo }) => {
             open={isDeleteDialogOpen}
             onClose={closeDeleteDialog}
             onDelete={onDelete}
+            isLoading={isLoading}
           />
         )}
       </Dialog>

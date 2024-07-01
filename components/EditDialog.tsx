@@ -33,7 +33,7 @@ interface EditDialogProps {
   todo: ITodo | null;
 }
 
-const EditDialog: React.FC<EditDialogProps> = ({ open, onClose, todo }) => {
+const EditDialog = ({ open, onClose, todo }: EditDialogProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
