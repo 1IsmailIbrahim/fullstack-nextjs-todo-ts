@@ -1,22 +1,57 @@
-import React from "react";
-import { getTodoListAction } from "@/actions/todo.actions";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { ITodo } from "@/interfaces";
+import ActionsModal from "./ActionsModal";
 
-const TodoList = async () => {
-  const todos = await getTodoListAction();
+interface IProps {
+  todos: ITodo[];
+}
 
+const TodosList: React.FC<IProps> = ({ todos }) => {
+  let i = 1;
   return (
     <div>
-      {todos.map((todo) => (
-        <div
-          key={todo.id}
-          className="border border-gray-500 rounded-md p-2 my-2"
-        >
-          <h3>{todo.title}</h3>
-          <p className="text-gray-400">{todo.body}</p>
-        </div>
-      ))}
+      <Table>
+        <TableCaption>A list of your todos.</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead>No.</TableHead>
+            <TableHead>Title</TableHead>
+            <TableHead>Description</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {todos.map((todo) => (
+            <TableRow key={todo.id}>
+              <TableCell>{i++}</TableCell>
+              <TableCell>{todo.title}</TableCell>
+              <TableCell>{todo.body}</TableCell>
+              <TableCell className="w-[150px]">
+                {todo.completed ? (
+                  <Badge className="line-through">completed</Badge>
+                ) : (
+                  <Badge variant={"secondary"}>In progress</Badge>
+                )}
+              </TableCell>
+              <TableCell className="flex items-center space-x-2">
+                <ActionsModal todo={todo} />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 };
 
-export default TodoList;
+export default TodosList;

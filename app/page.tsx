@@ -1,11 +1,14 @@
+import { getTodoListAction } from "@/actions/todo.actions";
 import { CustomDialog } from "@/components/CustomDialog";
-import TodoList from "@/components/TodoList";
+import TodosList from "@/components/TodoList";
 
-const Home = () => {
+const Home = async() => {
+  const todos = await getTodoListAction();
+
   return (
     <main className="container">
       <CustomDialog />
-      <TodoList />
+      <TodosList todos={todos} />
     </main>
   );
 };
