@@ -40,12 +40,12 @@ const TodosList = ({ todos }: IProps) => {
         </TableHeader>
         <TableBody>
           {todos.map((todo) => (
-            <TableRow key={todo.id}>
+            <TableRow key={todo?.id}>
               <TableCell>{i++}</TableCell>
-              <TableCell>{todo.title}</TableCell>
-              <TableCell>{todo.body}</TableCell>
+              <TableCell>{todo?.title}</TableCell>
+              <TableCell>{todo?.body}</TableCell>
               <TableCell className="w-[150px]">
-                {todo.completed ? (
+                {todo?.completed ? (
                   <Badge className="line-through">completed</Badge>
                 ) : (
                   <Badge variant={"secondary"}>In progress</Badge>
@@ -61,7 +61,7 @@ const TodosList = ({ todos }: IProps) => {
           <TableRow>
             <TableCell colSpan={4}>Total</TableCell>
             <TableCell className="text-right">
-              {todos.length ? todos.length : "YOU DON'T HAVE ANY TODO YET!"}
+              {todos?.length ? todos?.length : "YOU DON'T HAVE ANY TODO YET!"}
             </TableCell>
           </TableRow>
         </TableFooter>
