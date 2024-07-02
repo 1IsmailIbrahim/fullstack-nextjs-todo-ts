@@ -36,8 +36,8 @@ export function AddDialog({ userId }: { userId: string | null }) {
   const { toast } = useToast();
 
   const defaultValues: Partial<TodoFormValues> = {
-    title: "I own a computer.",
-    body: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. At, facere.",
+    title: "",
+    body: "",
     completed: false,
   };
 
@@ -55,9 +55,17 @@ export function AddDialog({ userId }: { userId: string | null }) {
       toast({
         title: "Success",
         description: (
-          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-          </pre>
+          <div className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <div className="text-white">Your todo was added successfully:</div>
+            <pre className="text-white overflow-hidden">
+              {Object.entries(data).map(([key, value]) => (
+                <div key={key} className="flex gap-2 text-white">
+                  <span className="font-bold">{key}:</span>
+                  <span>{value}</span>
+                </div>
+              ))}
+            </pre>
+          </div>
         ),
       });
     } catch (error) {
@@ -72,7 +80,15 @@ export function AddDialog({ userId }: { userId: string | null }) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        setOpen(isOpen);
+        if (isOpen) {
+          form.reset(defaultValues);
+        }
+      }}
+    >
       <DialogTrigger asChild>
         <Button onClick={() => setOpen(true)}>
           <Plus size={16} className="mr-1" />

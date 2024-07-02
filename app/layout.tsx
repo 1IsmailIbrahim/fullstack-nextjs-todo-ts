@@ -5,6 +5,10 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { ClerkProvider } from "@clerk/nextjs";
 import Navbar from "@/components/Navbar";
+import { dark, experimental__simple } from "@clerk/themes";
+import { cookies } from "next/headers";
+import SetThemeCookie from "@/components/SetThemeCookie";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -21,13 +25,24 @@ export const metadata: Metadata = {
   ],
 };
 
+const getTheme = (): "dark" | "light" => {
+  const cookieStore = cookies();
+  const theme = cookieStore.get("theme")?.value;
+
+  return theme === "dark" ? "dark" : "light";
+};
+
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
+  const theme = getTheme();
+
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        baseTheme: theme === "dark" ? dark : experimental__simple,
+      }}
+    >
       <html lang="en">
         <body className={inter.className}>
           <ThemeProvider
@@ -36,6 +51,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <SetThemeCookie /> {/* Include the client component */}
             <Navbar />
             {children}
             <Toaster />

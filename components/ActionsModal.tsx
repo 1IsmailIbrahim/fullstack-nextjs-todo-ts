@@ -42,7 +42,7 @@ const ActionsModal = ({ todo }: ActionsModalProps) => {
     setIsLoading(true);
     try {
       if (todoToDelete) {
-        await deleteTodoAction(todoToDelete.id);
+        await deleteTodoAction(todoToDelete.id as string);
         closeDeleteDialog();
       }
     } catch (error) {

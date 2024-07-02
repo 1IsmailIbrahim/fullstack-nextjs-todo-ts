@@ -3,6 +3,7 @@ import {
   TableBody,
   TableCaption,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -22,8 +23,8 @@ const TodosList = ({ todos }: IProps) => {
 
   let i = 1;
   return (
-    <div>
-      <div>
+    <div className="space-y-4 mt-8 w-full lg:w-3/4 mx-auto">
+      <div className="flex justify-end">
         <AddDialog userId={userId} />
       </div>
       <Table>
@@ -34,7 +35,7 @@ const TodosList = ({ todos }: IProps) => {
             <TableHead>Title</TableHead>
             <TableHead>Description</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead>Actions</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -50,12 +51,20 @@ const TodosList = ({ todos }: IProps) => {
                   <Badge variant={"secondary"}>In progress</Badge>
                 )}
               </TableCell>
-              <TableCell className="flex items-center space-x-2">
+              <TableCell className="flex items-center space-x-2 justify-end">
                 <ActionsModal todo={todo} />
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TableCell colSpan={4}>Total</TableCell>
+            <TableCell className="text-right">
+              {todos.length ? todos.length : "YOU DON'T HAVE ANY TODO YET!"}
+            </TableCell>
+          </TableRow>
+        </TableFooter>
       </Table>
     </div>
   );

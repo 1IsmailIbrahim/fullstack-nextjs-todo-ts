@@ -57,9 +57,19 @@ const EditDialog = ({ open, onClose, todo }: EditDialogProps) => {
       toast({
         title: "Success",
         description: (
-          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-          </pre>
+          <div className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <div className="text-white">
+              Your todo was updated successfully:
+            </div>
+            <pre className="text-white overflow-hidden">
+              {Object.entries(data).map(([key, value]) => (
+                <div key={key} className="flex gap-2 text-white">
+                  <span className="font-bold">{key}:</span>
+                  <span>{value}</span>
+                </div>
+              ))}
+            </pre>
+          </div>
         ),
       });
     } catch (error) {
